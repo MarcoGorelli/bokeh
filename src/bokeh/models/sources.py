@@ -27,6 +27,7 @@ from typing import (
 )
 
 # External imports
+import narwhals.stable.v1 as nw
 import numpy as np
 
 # Bokeh imports
@@ -208,7 +209,9 @@ class ColumnDataSource(ColumnarDataSource):
     to the ``ColumnDataSource`` initializer.
     """).accepts(
         Object("pandas.DataFrame"), lambda x: ColumnDataSource._data_from_df(x),
-    ).accepts(
+     ).accepts(
+        Object("narwhals.DataFrame"), lambda x: ColumnDataSource._data_from_df(x),
+     ).accepts(
         Object("pandas.core.groupby.GroupBy"), lambda x: ColumnDataSource._data_from_groupby(x),
     ).asserts(lambda _, data: len({len(x) for x in data.values()}) <= 1,
                  lambda obj, name, data: warn(
@@ -233,7 +236,7 @@ class ColumnDataSource(ColumnarDataSource):
 
         import pandas as pd
         if not isinstance(raw_data, dict):
-            if isinstance(raw_data, pd.DataFrame):
+            if nw.dependencies.is_into_dataframe(raw_data):
                 raw_data = self._data_from_df(raw_data)
             elif isinstance(raw_data, pd.core.groupby.GroupBy):
                 raw_data = self._data_from_groupby(raw_data)
@@ -261,29 +264,39 @@ class ColumnDataSource(ColumnarDataSource):
             dict[str, np.array]
 
         '''
-        import pandas as pd
+        if nw.dependencies.is_pandas_dataframe(df):
+            import pandas as pd
+            _df = df.copy()
 
-        _df = df.copy()
-
-        # Flatten columns
-        if isinstance(df.columns, pd.MultiIndex):
-            try:
-                _df.columns = ['_'.join(col) for col in _df.columns.values]
-            except TypeError:
-                raise TypeError('Could not flatten MultiIndex columns. '
-                                'use string column names or flatten manually')
-        # Transform columns CategoricalIndex in list
-        if isinstance(df.columns, pd.CategoricalIndex):
-            _df.columns = df.columns.tolist()
-        # Flatten index
-        index_name = ColumnDataSource._df_index_name(df)
-        if index_name == 'index':
-            _df.index = pd.Index(_df.index.values)
+            # Flatten columns
+            if isinstance(_df.columns, pd.MultiIndex):
+                try:
+                    _df.columns = ['_'.join(col) for col in _df.columns.values]
+                except TypeError:
+                    raise TypeError('Could not flatten MultiIndex columns. '
+                                    'use string column names or flatten manually')
+            # Transform columns CategoricalIndex in list
+            if isinstance(_df.columns, pd.CategoricalIndex):
+                _df.columns = _df.columns.tolist()
+            # Flatten index
+            index_name = ColumnDataSource._df_index_name(_df)
+            if index_name == 'index':
+                _df.index = pd.Index(_df.index.values)
+            else:
+                _df.index = pd.Index(_df.index.values, name=index_name)
+            _df.reset_index(inplace=True)
+            _df = nw.from_native(_df, eager_only=True)
         else:
-            _df.index = pd.Index(_df.index.values, name=index_name)
-        _df.reset_index(inplace=True)
+            _df = nw.from_native(df, eager_only=True)
+            if 'index' in _df.columns and 'level_0' in _df.columns:
+                raise ValueError('Could use dataframe with both "index" and "level_0" as column names.')
+            elif 'index' in _df.columns:
+                # Mirror pandas `reset_index` behaviour
+                _df = _df.with_row_index('level_0')
+            else:
+                _df = _df.with_row_index()
 
-        tmp_data = {c: v.values for c, v in _df.items()}
+        tmp_data = {c: v.to_numpy() for c, v in _df.to_dict(as_series=True).items()}
 
         new_data: DataDict = {}
         for k, v in tmp_data.items():
