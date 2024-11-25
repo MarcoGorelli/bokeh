@@ -23,6 +23,7 @@ import pandas as pd
 import pytest
 from narwhals.stable.v1.typing import IntoDataFrame
 
+pandas_1x = pd.__version__.startswith("1")
 
 def pytest_collection_modifyitems(items: list[_pytest.nodes.Item]) -> None:
     for item in items:
@@ -75,8 +76,10 @@ def pyarrow_table_constructor(obj) -> IntoDataFrame:
     return pa.table(obj)  # type: ignore[no-any-return]
 
 
-constructors = [pandas_constructor, pandas_nullable_constructor]
+constructors = [pandas_constructor]
 
+if not pandas_1x:
+    constructors.append(pandas_nullable_constructor)
 if importlib.util.find_spec('pyarrow') is not None:
     constructors.extend([pandas_pyarrow_constructor, pyarrow_table_constructor])
 if importlib.util.find_spec('polars') is not None:
