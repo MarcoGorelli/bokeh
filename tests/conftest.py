@@ -13,17 +13,15 @@ pytest_plugins = (
 )
 
 # Standard library imports
+import importlib
+import importlib.util
 from inspect import iscoroutinefunction
 
 # External imports
 import _pytest
 import pandas as pd
-import polars as pl
-import pyarrow as pa
 import pytest
 from narwhals.stable.v1.typing import IntoDataFrame
-
-pandas_1x = pd.__version__.startswith("1")
 
 
 def pytest_collection_modifyitems(items: list[_pytest.nodes.Item]) -> None:
@@ -68,22 +66,21 @@ def pandas_pyarrow_constructor(obj) -> IntoDataFrame:
 
 
 def polars_eager_constructor(obj) -> IntoDataFrame:
+    import polars as pl
     return pl.DataFrame(obj)
 
 
 def pyarrow_table_constructor(obj) -> IntoDataFrame:
+    import pyarrow as pa
     return pa.table(obj)  # type: ignore[no-any-return]
 
 
-constructors = [polars_eager_constructor, pyarrow_table_constructor, pandas_constructor]
+constructors = [pandas_constructor, pandas_nullable_constructor]
 
-if not pandas_1x:
-    constructors.extend(
-        [
-            pandas_nullable_constructor,
-            pandas_pyarrow_constructor,
-        ],
-    )
+if importlib.util.find_spec('pyarrow') is not None:
+    constructors.extend([pandas_pyarrow_constructor, pyarrow_table_constructor])
+if importlib.util.find_spec('polars') is not None:
+    constructors.append(polars_eager_constructor)
 
 
 @pytest.fixture(params=constructors)
