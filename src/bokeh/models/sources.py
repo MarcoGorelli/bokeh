@@ -262,26 +262,26 @@ class ColumnDataSource(ColumnarDataSource):
             dict[str, np.array]
 
         '''
-        if nw.dependencies.is_pandas_dataframe(df):
-            import pandas as pd
+        if nw.dependencies.is_pandas_like_dataframe(df):
+            pdx = nw.get_native_namespace(nw.from_native(df))
             _df = df.copy()
 
             # Flatten columns
-            if isinstance(_df.columns, pd.MultiIndex):
+            if isinstance(_df.columns, pdx.MultiIndex):
                 try:
                     _df.columns = ['_'.join(col) for col in _df.columns.values]
                 except TypeError:
                     raise TypeError('Could not flatten MultiIndex columns. '
                                     'use string column names or flatten manually')
             # Transform columns CategoricalIndex in list
-            if isinstance(_df.columns, pd.CategoricalIndex):
+            if isinstance(_df.columns, pdx.CategoricalIndex):
                 _df.columns = _df.columns.tolist()
             # Flatten index
             index_name = ColumnDataSource._df_index_name(_df)
             if index_name == 'index':
-                _df.index = pd.Index(_df.index.values)
+                _df.index = pdx.Index(_df.index.values)
             else:
-                _df.index = pd.Index(_df.index.values, name=index_name)
+                _df.index = pdx.Index(_df.index.values, name=index_name)
             _df.reset_index(inplace=True)
             _df = nw.from_native(_df, eager_only=True)
         else:

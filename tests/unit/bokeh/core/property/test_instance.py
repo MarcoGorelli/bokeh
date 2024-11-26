@@ -18,13 +18,14 @@ import pytest ; pytest
 
 # External imports
 import narwhals.stable.v1 as nw
-from _util_property import _TestHasProps, _TestModel, _TestModel2
 from pandas import DataFrame, Series
 from pandas.core.groupby import GroupBy
-from tests.support.util.api import verify_all
 
 # Bokeh imports
 from bokeh.core.has_props import HasProps
+from tests.support.util.api import verify_all
+
+from _util_property import _TestHasProps, _TestModel, _TestModel2
 
 # Module under test
 import bokeh.core.property.instance as bcpi # isort:skip
