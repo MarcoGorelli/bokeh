@@ -77,7 +77,7 @@ class PandasDataFrame(Property["DataFrame"]):
     Bokeh models directly.
 
     """
-    def __init__(self):
+    def __init__(self) -> None:
         deprecated((3,7,0), "PandasDataFrame", "EagerDataFrame")
         super().__init__()
 
