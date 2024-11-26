@@ -20,6 +20,7 @@ import pytest ; pytest
 import pandas as pd
 
 # Bokeh imports
+from bokeh.util.warnings import BokehDeprecationWarning
 from tests.support.util.api import verify_all
 
 from _util_property import _TestHasProps, _TestModel
@@ -32,6 +33,7 @@ import bokeh.core.property.pd as bcpp # isort:skip
 #-----------------------------------------------------------------------------
 
 ALL = (
+    'EagerDataFrame',
     'PandasDataFrame',
     'PandasGroupBy',
 )
@@ -43,11 +45,38 @@ ALL = (
 
 class Test_PandasDataFrame:
     def test_valid(self) -> None:
-        prop = bcpp.PandasDataFrame()
+        with pytest.warns(BokehDeprecationWarning):
+            prop = bcpp.PandasDataFrame()
         assert prop.is_valid(pd.DataFrame())
 
     def test_invalid(self) -> None:
-        prop = bcpp.PandasDataFrame()
+        with pytest.warns(BokehDeprecationWarning):
+            prop = bcpp.PandasDataFrame()
+        assert not prop.is_valid(None)
+        assert not prop.is_valid(1.0+1.0j)
+        assert not prop.is_valid(())
+        assert not prop.is_valid([])
+        assert not prop.is_valid({})
+        assert not prop.is_valid(_TestHasProps())
+        assert not prop.is_valid(_TestModel())
+
+class Test_EagerDataFrame:
+    def test_valid(self) -> None:
+        prop = bcpp.EagerDataFrame()
+        assert prop.is_valid(pd.DataFrame())
+
+    def test_valid_polars(self) -> None:
+        polars = pytest.importorskip('polars')
+        prop = bcpp.EagerDataFrame()
+        assert prop.is_valid(polars.DataFrame())
+
+    def test_valid_pyarrow(self) -> None:
+        pyarrow = pytest.importorskip('pyarrow')
+        prop = bcpp.EagerDataFrame()
+        assert prop.is_valid(pyarrow.table({}))
+
+    def test_invalid(self) -> None:
+        prop = bcpp.EagerDataFrame()
         assert not prop.is_valid(None)
         assert not prop.is_valid(1.0+1.0j)
         assert not prop.is_valid(())

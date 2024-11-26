@@ -160,6 +160,7 @@ Special Properties
 Validation-only Properties
 --------------------------
 
+.. autoclass:: EagerDataFrame
 .. autoclass:: PandasDataFrame
 .. autoclass:: PandasGroupBy
 
@@ -224,6 +225,7 @@ __all__ = (
     'DeprecatedAlias',
     'Dict',
     'DistanceSpec',
+    'EagerDataFrame',
     'Either',
     'Enum',
     'Factor',
@@ -384,6 +386,7 @@ from .property.numeric import Size
 
 from .property.override import Override
 
+from .property.pd import EagerDataFrame
 from .property.pd import PandasDataFrame
 from .property.pd import PandasGroupBy
 
