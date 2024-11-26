@@ -815,7 +815,7 @@ RangeLike = Either(
         Tuple(TimeDelta, TimeDelta),
     ),
     Seq(String),
-    Object("pandas.Series"),
+    Object("narwhals.Series"),
     Object("pandas.core.groupby.GroupBy"),
 )
 

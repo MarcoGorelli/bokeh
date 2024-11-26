@@ -114,12 +114,9 @@ class Object(Property[T]):
 
     def validate(self, value: Any, detail: bool = True) -> None:
         super().validate(value, detail)
-        if not nw.dependencies.is_pandas_dataframe(value):
-            # Try converting to Narwhals so that any dataframe supported by Narwhals
-            # can be supported by ColumnDataSource. We don't perform this conversion
-            # for pandas so that code written using `Object('pandas.Dataframe)` can
-            # keep working (backwards-compatibility).
-            value = nw.from_native(value, pass_through=True)
+        # Try converting to Narwhals so that any dataframe supported by Narwhals
+        # can be supported by ColumnDataSource.
+        value = nw.from_native(value, pass_through=True, allow_series=True)
 
         if isinstance(value, self.instance_type):
             return

@@ -208,8 +208,6 @@ class ColumnDataSource(ColumnarDataSource):
     objects. In these cases, the behaviour is identical to passing the objects
     to the ``ColumnDataSource`` initializer.
     """).accepts(
-        Object("pandas.DataFrame"), lambda x: ColumnDataSource._data_from_df(x),
-     ).accepts(
         Object("narwhals.DataFrame"), lambda x: ColumnDataSource._data_from_df(x),
      ).accepts(
         Object("pandas.core.groupby.GroupBy"), lambda x: ColumnDataSource._data_from_groupby(x),
