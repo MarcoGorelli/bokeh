@@ -69,6 +69,9 @@ class EagerDataFrame(Property["DataFrame"]):
 class PandasDataFrame(Property["DataFrame"]):
     """ Accept Pandas DataFrame values.
 
+    .. deprecated:: 3.7.0
+        Use ``EagerDataFrame()`` instead.
+
     This property only exists to support type validation, e.g. for "accepts"
     clauses. It is not serializable itself, and is not useful to add to
     Bokeh models directly.
