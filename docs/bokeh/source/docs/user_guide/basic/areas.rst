@@ -28,7 +28,7 @@ Blocks
 ~~~~~~
 
 To draw *axis aligned* rectangles by specifying the ``x`` and ``y``
-coordinates for a corner, and a ``width`` and ``height``, use the |block|
+coordinates for a lower-left corner, and a ``width`` and ``height``, use the |block|
 glyph function:
 
 .. bokeh-plot:: __REPO__/examples/basic/areas/block.py
@@ -175,7 +175,7 @@ corresponding label or color.
 Strips
 ~~~~~~
 
-To draw multiple horizontal or vertical strips (bars of inifinite width or
+To draw multiple horizontal or vertical strips (bars of infinite width or
 height respectively), use the |hstrip| or |vstrip| glyph methods. These methods
 accept either ``y0`` and ``y1`` or ``x0`` and ``x1`` coordinate components
 respectively. Note that these glyphs can only compute bounds in one axis, thus

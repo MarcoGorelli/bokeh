@@ -118,6 +118,18 @@ function svg_image() {
 `)
 }
 
+const osm_source = new WMTSTileSource({
+  // url: "https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png",
+  url: "/assets/tiles/osm/{Z}_{X}_{Y}.png",
+  attribution: "&copy; (0) OSM source attribution",
+})
+
+const esri_source = new WMTSTileSource({
+  // url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg",
+  url: "/assets/tiles/esri/{Z}_{Y}_{X}.jpg",
+  attribution: "&copy; (1) Esri source attribution",
+})
+
 describe("Bug", () => {
   describe("in issue #9879", () => {
     it("disallows to change FactorRange to a lower dimension with a different number of factors", async () => {
@@ -949,7 +961,7 @@ describe("Bug", () => {
   })
 
   describe("in issue #11045", () => {
-    it("prevents correct paint of glyphs using hatch patters in SVG backend after pan", async () => {
+    it("prevents correct paint of glyphs using hatch patterns in SVG backend after pan", async () => {
       const p = fig([200, 200], {x_range: [-1, 1], y_range: [-1, 1], output_backend: "svg"})
       p.circle({x: 0, y: 0, radius: 1, fill_color: "orange", alpha: 0.6, hatch_pattern: "@"})
       const {view} = await display(p)
@@ -1282,21 +1294,9 @@ describe("Bug", () => {
   })
 
   describe("in issue #11413", () => {
-    const osm_source = new WMTSTileSource({
-      // url: "https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png",
-      url: "/assets/tiles/osm/{Z}_{X}_{Y}.png",
-      attribution: "&copy; (0) OSM source attribution",
-    })
-
-    const esri_source = new WMTSTileSource({
-      // url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg",
-      url: "/assets/tiles/esri/{Z}_{Y}_{X}.jpg",
-      attribution: "&copy; (1) Esri source attribution",
-    })
-
     it("doesn't allow to remove an annotation element associated with a tile renderer", async () => {
-      const osm = new TileRenderer({tile_source: osm_source})
-      const esri = new TileRenderer({tile_source: esri_source})
+      const osm = new TileRenderer({tile_source: osm_source.clone()})
+      const esri = new TileRenderer({tile_source: esri_source.clone()})
 
       const p0 = fig([300, 200], {
         x_range: [-2000000, 6000000],
@@ -2084,7 +2084,7 @@ describe("Bug", () => {
   })
 
   describe("in issue #11339", () => {
-    it.allowing(2*8)("collapses layout after toggling visiblity", async () => {
+    it.allowing(2*8)("collapses layout after toggling visibility", async () => {
       const toggle = new Toggle({label: "Click", active: true})
       const select1 = new Select({title: "Select 1:", options: ["1", "2"], value: "1"})
       const select2 = new Select({title: "Select 2:", options: ["1", "2"], value: "1"})
@@ -2195,7 +2195,7 @@ describe("Bug", () => {
   })
 
   describe("in issue #9992", () => {
-    it("doesn't correctly display layout when visiblity changes", async () => {
+    it("doesn't correctly display layout when visibility changes", async () => {
       function create_figure(x: Arrayable<number>, y: Arrayable<number>, log_scale: boolean = false) {
         const plot = figure({width: 300, height: 300, y_axis_type: log_scale ? "log" : "linear"})
         plot.line(x, y, {line_width: 3, line_alpha: 0.6})
@@ -2290,7 +2290,7 @@ describe("Bug", () => {
       await display(layout, [100, 50])
     })
 
-    it("doesn't correctly display layout when visiblity changes", async () => {
+    it("doesn't correctly display layout when visibility changes", async () => {
       const {layout, button} = make()
 
       const {view} = await display(layout, [550, 350])
@@ -4189,6 +4189,23 @@ describe("Bug", () => {
         location: "bottom_right",
       })
       p.add_layout(scale_bar)
+
+      await display(p)
+    })
+  })
+
+  describe("in issue #14168", () => {
+    it("doesn't allow to add multiple TileRenderer instances to a plot", async () => {
+      const osm = new TileRenderer({tile_source: osm_source.clone()})
+      const esri = new TileRenderer({tile_source: esri_source.clone(), alpha: 0.4})
+
+      const p = fig([300, 200], {
+        x_range: [-2000000, 6000000],
+        y_range: [-1000000, 7000000],
+        x_axis_type: "mercator",
+        y_axis_type: "mercator",
+        renderers: [osm, esri],
+      })
 
       await display(p)
     })
