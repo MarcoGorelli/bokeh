@@ -23,11 +23,7 @@ log = logging.getLogger(__name__)
 # Standard library imports
 from typing import TYPE_CHECKING, Any
 
-# External imports
-import narwhals.stable.v1 as nw
-
 # Bokeh imports
-from ...util.deprecation import deprecated
 from .bases import Property
 
 if TYPE_CHECKING:
@@ -58,6 +54,7 @@ class EagerDataFrame(Property["DataFrame"]):
     """
 
     def validate(self, value: Any, detail: bool = True) -> None:
+        import narwhals.stable.v1 as nw
         super().validate(value, detail)
 
         if nw.dependencies.is_into_dataframe(value):
@@ -69,8 +66,8 @@ class EagerDataFrame(Property["DataFrame"]):
 class PandasDataFrame(Property["DataFrame"]):
     """ Accept Pandas DataFrame values.
 
-    .. deprecated:: 3.7.0
-        Use ``EagerDataFrame()`` instead.
+    This class is pandas-specific - are more generic one is
+    ``EagerDataFrame()``.
 
     This property only exists to support type validation, e.g. for "accepts"
     clauses. It is not serializable itself, and is not useful to add to
@@ -78,7 +75,6 @@ class PandasDataFrame(Property["DataFrame"]):
 
     """
     def __init__(self) -> None:
-        deprecated((3,7,0), "PandasDataFrame", "EagerDataFrame")
         super().__init__()
 
 
