@@ -17,7 +17,6 @@ import pytest ; pytest
 #-----------------------------------------------------------------------------
 
 # External imports
-import narwhals.stable.v1 as nw
 from pandas import DataFrame, Series
 from pandas.core.groupby import GroupBy
 
@@ -69,14 +68,14 @@ class Test_InstanceDefault:
 class Test_Object:
 
     def test_valid(self) -> None:
-        prop0 = bcpi.Object(nw.Series)
+        prop0 = bcpi.Object(Series)
         assert prop0.is_valid(Series([1, 2, 3]))
-        prop1 = bcpi.Object("narwhals.Series")
+        prop1 = bcpi.Object("pandas.Series")
         assert prop1.is_valid(Series([1, 2, 3]))
 
-        prop2 = bcpi.Object(nw.DataFrame)
+        prop2 = bcpi.Object(DataFrame)
         assert prop2.is_valid(DataFrame())
-        prop3 = bcpi.Object("narwhals.DataFrame")
+        prop3 = bcpi.Object("pandas.DataFrame")
         assert prop3.is_valid(DataFrame())
 
         prop4 = bcpi.Object(GroupBy)
@@ -85,26 +84,26 @@ class Test_Object:
         assert prop5.is_valid(GroupBy(DataFrame()))
 
     def test_invalid(self) -> None:
-        prop0 = bcpi.Object(nw.Series)
+        prop0 = bcpi.Object(Series)
         assert not prop0.is_valid(DataFrame())
         assert not prop0.is_valid(GroupBy(DataFrame()))
         assert not prop0.is_valid({})
         assert not prop0.is_valid(object())
         assert not prop0.is_valid(_TestModel())
-        prop1 = bcpi.Object("narwhals.Series")
+        prop1 = bcpi.Object("pandas.Series")
         assert not prop1.is_valid(DataFrame())
         assert not prop1.is_valid(GroupBy(DataFrame()))
         assert not prop1.is_valid({})
         assert not prop1.is_valid(object())
         assert not prop1.is_valid(_TestModel())
 
-        prop2 = bcpi.Object(nw.DataFrame)
+        prop2 = bcpi.Object(DataFrame)
         assert not prop2.is_valid(Series([1, 2, 3]))
         assert not prop2.is_valid(GroupBy(DataFrame()))
         assert not prop2.is_valid({})
         assert not prop2.is_valid(object())
         assert not prop2.is_valid(_TestModel())
-        prop3 = bcpi.Object("narwhals.DataFrame")
+        prop3 = bcpi.Object("pandas.DataFrame")
         assert not prop3.is_valid(Series([1, 2, 3]))
         assert not prop3.is_valid(GroupBy(DataFrame()))
         assert not prop3.is_valid({})
