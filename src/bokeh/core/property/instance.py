@@ -114,9 +114,6 @@ class Object(Property[T]):
 
     def validate(self, value: Any, detail: bool = True) -> None:
         super().validate(value, detail)
-        # Try converting to Narwhals so that any dataframe supported by Narwhals
-        # can be supported by ColumnDataSource.
-        value = nw.from_native(value, pass_through=True, allow_series=True)
 
         if isinstance(value, self.instance_type):
             return

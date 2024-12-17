@@ -740,6 +740,8 @@ class ColumnDataPropertyDescriptor(PropertyDescriptor):
             None
 
         """
+        import narwhals.stable.v1 as nw
+
         if not hasattr(obj, '_property_values'):
             # Initial values should be passed in to __init__, not set directly
             class_name = obj.__class__.__name__
@@ -756,6 +758,9 @@ class ColumnDataPropertyDescriptor(PropertyDescriptor):
         from ...document.events import ColumnDataChangedEvent
         hint = ColumnDataChangedEvent(obj.document, obj, "data", setter=setter) if obj.document else None
 
+        # Try converting to Narwhals so that any dataframe supported by Narwhals
+        # can be supported.
+        value = nw.from_native(value, eager_only=True, allow_series=True, pass_through=True)
         value = self.property.prepare_value(obj, self.name, value)
         old = self._get(obj)
         self._set(obj, old, value, hint=hint, setter=setter)
