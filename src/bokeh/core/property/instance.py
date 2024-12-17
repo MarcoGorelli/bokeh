@@ -33,9 +33,6 @@ from typing import (
     TypeVar,
 )
 
-# External imports
-import narwhals.stable.v1 as nw
-
 # Bokeh imports
 from ..has_props import HasProps
 from ..serialization import Serializable
