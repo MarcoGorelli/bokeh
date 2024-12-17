@@ -20,7 +20,6 @@ import pytest ; pytest
 import pandas as pd
 
 # Bokeh imports
-from bokeh.util.warnings import BokehDeprecationWarning
 from tests.support.util.api import verify_all
 
 from _util_property import _TestHasProps, _TestModel
@@ -45,13 +44,11 @@ ALL = (
 
 class Test_PandasDataFrame:
     def test_valid(self) -> None:
-        with pytest.warns(BokehDeprecationWarning):
-            prop = bcpp.PandasDataFrame()
+        prop = bcpp.PandasDataFrame()
         assert prop.is_valid(pd.DataFrame())
 
     def test_invalid(self) -> None:
-        with pytest.warns(BokehDeprecationWarning):
-            prop = bcpp.PandasDataFrame()
+        prop = bcpp.PandasDataFrame()
         assert not prop.is_valid(None)
         assert not prop.is_valid(1.0+1.0j)
         assert not prop.is_valid(())
