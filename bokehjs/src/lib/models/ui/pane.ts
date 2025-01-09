@@ -18,7 +18,7 @@ export class PaneView extends UIElementView {
     return this.model.elements
   }
   get element_views(): ViewOf<ElementLike>[] {
-    return this.elements.map((element) => this._element_views.get(element)!)
+    return this.elements.map((element) => this._element_views.get(element)).filter((view) => view != null)
   }
 
   override *children(): IterViews {
@@ -33,10 +33,6 @@ export class PaneView extends UIElementView {
 
   protected async _build_elements(): Promise<BuildResult<ElementLike>> {
     return await build_views(this._element_views, this.elements, {parent: this})
-  }
-
-  get self_target(): HTMLElement | ShadowRoot {
-    return this.shadow_el
   }
 
   protected async _update_elements(): Promise<void> {

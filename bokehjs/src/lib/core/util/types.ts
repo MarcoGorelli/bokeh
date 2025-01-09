@@ -63,7 +63,10 @@ export function isArray<T>(obj: unknown): obj is T[] {
   return Array.isArray(obj)
 }
 
-export function isArrayOf<T>(array: unknown[], predicate: (item: unknown) => item is T): array is T[] {
+export function isArrayOf<T>(array: unknown, predicate: (item: unknown) => item is T): array is T[] {
+  if (!isArray(array)) {
+    return false
+  }
   for (const item of array) {
     if (!predicate(item)) {
       return false
@@ -72,7 +75,10 @@ export function isArrayOf<T>(array: unknown[], predicate: (item: unknown) => ite
   return true
 }
 
-export function isArrayableOf<T>(array: Arrayable, predicate: (item: unknown) => item is T): array is Arrayable<T> {
+export function isArrayableOf<T>(array: unknown, predicate: (item: unknown) => item is T): array is Arrayable<T> {
+  if (!isArrayable(array)) {
+    return false
+  }
   for (const item of array) {
     if (!predicate(item)) {
       return false
@@ -108,4 +114,9 @@ export function isIterable(obj: unknown): obj is Iterable<unknown> {
 
 export function isArrayable(obj: unknown): obj is Arrayable<unknown> {
   return isIterable(obj) && "length" in obj
+}
+
+export function is_ArrayBufferLike(obj: unknown): obj is ArrayBufferLike {
+  // SharedArrayBuffer is only available in cross origin isolated environments, otherwise it's undefined
+  return obj instanceof ArrayBuffer || (typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer)
 }

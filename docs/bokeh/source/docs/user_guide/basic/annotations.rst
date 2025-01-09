@@ -93,7 +93,7 @@ keyword argument:
 
 .. code-block:: python
 
-    p.circle('x', 'y', legend_label="some label")
+    p.scatter('x', 'y', legend_label="some label")
 
 If you assign the same label name to multiple glyphs, all the glyphs will be
 combined into a single legend item with that label.
@@ -115,7 +115,7 @@ pass the column name as the ``legend_group`` keyword argument to a glyph method:
 
 .. code-block:: python
 
-    p.circle('x', 'y', legend_group="colname", source=source)
+    p.circle('x', 'y', radius=0.5, legend_group="colname", source=source)
 
 Because ``legend_group`` references a column of a ColumnDataSource, you need to
 always provide a ``source`` argument to the glyph method as well. Additionally,
@@ -142,7 +142,7 @@ JavaScript side, for example.
 
 .. code-block:: python
 
-    p.circle('x', 'y', legend_field="colname", source=source)
+    p.circle('x', 'y', radius=0.5, legend_field="colname", source=source)
 
 In this case, the Python code does *not* see multiple items in ``Legend.items``.
 Instead, there is only a single item that represents the grouping, and the
@@ -475,7 +475,7 @@ multi-line label.
 
 .. code-block:: python
 
-    Label(x=100, y=5, text='A very long label\nwith mutiple lines')
+    Label(x=100, y=5, text='A very long label\nwith multiple lines')
 
 To create several labels at once, use the |LabelSet| annotation. To configure
 the labels of a label set, use a data source that contains columns with data for

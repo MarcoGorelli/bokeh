@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 #-----------------------------------------------------------------------------
 
 __all__ = (
+    'EagerDataFrame',
     'PandasDataFrame',
     'PandasGroupBy',
 )
@@ -43,8 +44,8 @@ __all__ = (
 # General API
 #-----------------------------------------------------------------------------
 
-class PandasDataFrame(Property["DataFrame"]):
-    """ Accept Pandas DataFrame values.
+class EagerDataFrame(Property["DataFrame"]):
+    """ Accept eager dataframe supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
     clauses. It is not serializable itself, and is not useful to add to
@@ -53,8 +54,31 @@ class PandasDataFrame(Property["DataFrame"]):
     """
 
     def validate(self, value: Any, detail: bool = True) -> None:
+        import narwhals.stable.v1 as nw
         super().validate(value, detail)
 
+        if nw.dependencies.is_into_dataframe(value):
+            return
+
+        msg = "" if not detail else f"expected object convertible to Narwhals DataFrame, got {value!r}"
+        raise ValueError(msg)
+
+class PandasDataFrame(Property["DataFrame"]):
+    """ Accept Pandas DataFrame values.
+
+    This class is pandas-specific - are more generic one is
+    ``EagerDataFrame()``.
+
+    This property only exists to support type validation, e.g. for "accepts"
+    clauses. It is not serializable itself, and is not useful to add to
+    Bokeh models directly.
+
+    """
+    def __init__(self) -> None:
+        super().__init__()
+
+
+    def validate(self, value: Any, detail: bool = True) -> None:
         import pandas as pd
         if isinstance(value, pd.DataFrame):
             return

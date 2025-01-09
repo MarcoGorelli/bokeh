@@ -75,6 +75,7 @@ ALL = (
     'DeprecatedAlias',
     'Dict',
     'DistanceSpec',
+    'EagerDataFrame',
     'Either',
     'Enum',
     'Factor',

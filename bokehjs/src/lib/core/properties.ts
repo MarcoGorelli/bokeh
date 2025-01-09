@@ -17,6 +17,7 @@ import type {/*Value,*/ Scalar, Vector, Dimensional, ScalarExpression, VectorExp
 import {isValue, isField, isExpr} from "./vectorization"
 import {settings} from "./settings"
 import type {Kind} from "./kinds"
+import {PrefixedStr} from "./kinds"
 import type {NDArray, NDArrayType} from "./util/ndarray"
 import {is_NDArray} from "./util/ndarray"
 import {diagnostics} from "./diagnostics"
@@ -108,6 +109,10 @@ export type DefineOf<P, HP extends HasProps = HasProps> = {
 
 export type DefaultsOf<P> = {
   [K in keyof P]: P[K] extends Property<infer T> ? T | ((obj: HasProps) => T) : never
+}
+
+export type OptionsOf<P> = {
+  [K in keyof P]: P[K] extends Property<infer T> ? PropertyOptions<T> : never
 }
 
 type DefaultFn<T> = (obj: HasProps) => T
@@ -770,7 +775,10 @@ export class StringSpec extends DataSpec<string> {}
 export class NullStringSpec extends DataSpec<string | null> {}
 export class ArraySpec extends DataSpec<any[]> {}
 
-export class MarkerSpec extends DataSpec<enums.MarkerType | null> {}
+export const ExtMarkerType = PrefixedStr("@")
+export type ExtMarkerType = typeof ExtMarkerType["__type__"]
+
+export class MarkerSpec extends DataSpec<enums.MarkerType | ExtMarkerType | null> {}
 export class LineJoinSpec extends DataSpec<enums.LineJoin> {}
 export class LineCapSpec extends DataSpec<enums.LineCap> {}
 export class LineDashSpec extends DataSpec<enums.LineDash | number[]> {}

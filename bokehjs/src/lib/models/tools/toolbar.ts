@@ -1,7 +1,7 @@
 import {logger} from "core/logging"
 import type {StyleSheetLike} from "core/dom"
 import {div, a} from "core/dom"
-import type {ViewStorage, IterViews} from "core/build_views"
+import type {ViewStorage, IterViews, ViewOf} from "core/build_views"
 import {build_views, remove_views} from "core/build_views"
 import type * as p from "core/properties"
 import {UIElement, UIElementView} from "../ui/ui_element"
@@ -22,6 +22,7 @@ import {HelpTool} from "./actions/help_tool"
 import type {At} from "core/util/menus"
 import {ContextMenu} from "core/util/menus"
 import {Signal0} from "core/signaling"
+import {version} from "version"
 
 import toolbars_css, * as toolbars from "styles/toolbar.css"
 import logos_css, * as logos from "styles/logo.css"
@@ -36,6 +37,9 @@ export class ToolbarView extends UIElementView {
 
   get tool_buttons(): ToolButton[] {
     return this._tool_buttons.flat()
+  }
+  get tool_button_views(): ViewOf<ToolButton>[] {
+    return this.tool_buttons.map((tb) => this._tool_button_views.get(tb)).filter((view) => view != null)
   }
 
   protected _overflow_menu: ContextMenu
@@ -193,7 +197,7 @@ export class ToolbarView extends UIElementView {
 
     if (this.model.logo != null) {
       const gray = this.model.logo === "grey" ? logos.grey : null
-      const logo_el = a({href: "https://bokeh.org/", target: "_blank", class: [logos.logo, logos.logo_small, gray]})
+      const logo_el = a({href: "https://bokeh.org/", target: "_blank", class: [logos.logo, logos.logo_small, gray], title: `Bokeh ${version}`})
       this._items.push(logo_el)
       this.shadow_el.appendChild(logo_el)
     }
