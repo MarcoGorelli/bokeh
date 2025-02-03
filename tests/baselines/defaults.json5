@@ -1792,7 +1792,58 @@
     formatter: {
       type: "object",
       name: "DatetimeTickFormatter",
-      attributes: {},
+      attributes: {
+        seconds: "%T",
+        minsec: "%T",
+        minutes: "%H:%M",
+        hours: "%H:%M",
+        days: "%b %d",
+        months: "%b %Y",
+        strip_leading_zeros: [
+          "microseconds",
+          "milliseconds",
+          "seconds",
+        ],
+        boundary_scaling: false,
+        context: {
+          type: "object",
+          name: "DatetimeTickFormatter",
+          attributes: {
+            microseconds: "%T",
+            milliseconds: "%T",
+            seconds: "%b %d, %Y",
+            minsec: "%b %d, %Y",
+            minutes: "%b %d, %Y",
+            hourmin: "%b %d, %Y",
+            hours: "%b %d, %Y",
+            days: "%Y",
+            months: "",
+            years: "",
+            boundary_scaling: false,
+            hide_repeats: true,
+            context: {
+              type: "object",
+              name: "DatetimeTickFormatter",
+              attributes: {
+                microseconds: "%b %d, %Y",
+                milliseconds: "%b %d, %Y",
+                seconds: "",
+                minsec: "",
+                minutes: "",
+                hourmin: "",
+                hours: "",
+                days: "",
+                months: "",
+                years: "",
+                boundary_scaling: false,
+                hide_repeats: true,
+              },
+            },
+            context_which: "all",
+          },
+        },
+        context_which: "all",
+      },
     },
   },
   LinearAxis: {
@@ -2571,25 +2622,17 @@
   ConnectedXYGlyph: {
     __extends__: "XYGlyph",
   },
-  FillGlyph: {
-    __extends__: "Glyph",
-  },
+  FillGlyph: {},
   Glyph: {
     __extends__: "Model",
     decorations: [],
   },
-  HatchGlyph: {
-    __extends__: "Glyph",
-  },
-  LineGlyph: {
-    __extends__: "Glyph",
-  },
+  HatchGlyph: {},
+  LineGlyph: {},
   RadialGlyph: {
     __extends__: "XYGlyph",
   },
-  TextGlyph: {
-    __extends__: "Glyph",
-  },
+  TextGlyph: {},
   XYGlyph: {
     __extends__: "Glyph",
   },
@@ -2824,7 +2867,10 @@
     },
   },
   Bezier: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     x0: {
       type: "field",
       field: "x0",
@@ -3134,7 +3180,7 @@
   },
   HArea: {
     __extends__: [
-      "LineGlyph",
+      "Glyph",
       "FillGlyph",
       "HatchGlyph",
     ],
@@ -3178,6 +3224,7 @@
   },
   HAreaStep: {
     __extends__: [
+      "Glyph",
       "FillGlyph",
       "HatchGlyph",
     ],
@@ -3299,7 +3346,10 @@
     },
   },
   HSpan: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     y: {
       type: "field",
       field: "y",
@@ -3335,6 +3385,7 @@
   },
   HStrip: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -3409,6 +3460,7 @@
   },
   HexTile: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -3593,6 +3645,7 @@
   },
   LRTBGlyph: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -3711,7 +3764,10 @@
     __extends__: "Text",
   },
   MultiLine: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     xs: {
       type: "field",
       field: "xs",
@@ -3751,6 +3807,7 @@
   },
   MultiPolygons: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -3941,6 +3998,7 @@
   },
   Patches: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -4092,7 +4150,10 @@
     },
   },
   Quadratic: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     x0: {
       type: "field",
       field: "x0",
@@ -4296,7 +4357,10 @@
     },
   },
   Segment: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     x0: {
       type: "field",
       field: "x0",
@@ -4508,6 +4572,7 @@
   },
   VArea: {
     __extends__: [
+      "Glyph",
       "FillGlyph",
       "HatchGlyph",
     ],
@@ -4551,6 +4616,7 @@
   },
   VAreaStep: {
     __extends__: [
+      "Glyph",
       "FillGlyph",
       "HatchGlyph",
     ],
@@ -4672,7 +4738,10 @@
     },
   },
   VSpan: {
-    __extends__: "LineGlyph",
+    __extends__: [
+      "Glyph",
+      "LineGlyph",
+    ],
     x: {
       type: "field",
       field: "x",
@@ -4708,6 +4777,7 @@
   },
   VStrip: {
     __extends__: [
+      "Glyph",
       "LineGlyph",
       "FillGlyph",
       "HatchGlyph",
@@ -5250,6 +5320,7 @@
   },
   Plot: {
     __extends__: "LayoutDOM",
+    context_menu: "auto",
     width: 600,
     height: 600,
     x_range: {
@@ -6591,6 +6662,13 @@
     description: null,
     visible: true,
   },
+  ToolMenu: {
+    __extends__: "Menu",
+    toolbar: {
+      type: "symbol",
+      name: "unset",
+    },
+  },
   ToolProxy: {
     __extends__: "Model",
     tools: [],
@@ -6754,6 +6832,21 @@
   },
   ActionItem: {
     __extends__: "MenuItem",
+  },
+  CheckableItem: {
+    __extends__: "MenuItem",
+  },
+  DividerItem: {
+    __extends__: "Model",
+  },
+  Menu: {
+    __extends__: "UIElement",
+    items: [],
+    reversed: false,
+  },
+  MenuItem: {
+    __extends__: "Model",
+    checked: null,
     icon: null,
     label: {
       type: "symbol",
@@ -6764,21 +6857,6 @@
     tooltip: null,
     disabled: false,
     action: null,
-  },
-  CheckableItem: {
-    __extends__: "ActionItem",
-    checked: false,
-  },
-  DividerItem: {
-    __extends__: "MenuItem",
-  },
-  Menu: {
-    __extends__: "UIElement",
-    items: [],
-    reversed: false,
-  },
-  MenuItem: {
-    __extends__: "Model",
   },
   Panel: {
     __extends__: "Pane",
