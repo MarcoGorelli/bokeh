@@ -27,7 +27,6 @@ from typing import (
 )
 
 # External imports
-import narwhals.stable.v1 as nw
 import numpy as np
 
 # Bokeh imports
@@ -232,14 +231,16 @@ class ColumnDataSource(ColumnarDataSource):
         # TODO (bev) invalid to pass args and "data", check and raise exception
         raw_data: DataDict = kwargs.pop("data", {})
 
+        import narwhals.stable.v1 as nw
         import pandas as pd
+
         if not isinstance(raw_data, dict):
             if nw.dependencies.is_into_dataframe(raw_data):
                 raw_data = self._data_from_df(raw_data)
             elif isinstance(raw_data, pd.core.groupby.GroupBy):
                 raw_data = self._data_from_groupby(raw_data)
             else:
-                raise ValueError(f"expected a dict or pandas.DataFrame, got {raw_data}")
+                raise ValueError(f"expected a dict or eager dataframe support by Narwhals, got {raw_data}")
         super().__init__(**kwargs)
         self.data.update(raw_data)
 
@@ -262,6 +263,8 @@ class ColumnDataSource(ColumnarDataSource):
             dict[str, np.array]
 
         '''
+        import narwhals.stable.v1 as nw
+
         if nw.dependencies.is_pandas_like_dataframe(df):
             pdx = nw.get_native_namespace(nw.from_native(df))
             _df = df.copy()

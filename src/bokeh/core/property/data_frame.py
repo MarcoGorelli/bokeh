@@ -36,6 +36,7 @@ if TYPE_CHECKING:
 
 __all__ = (
     'EagerDataFrame',
+    'EagerSeries',
     'PandasDataFrame',
     'PandasGroupBy',
 )

@@ -76,6 +76,7 @@ ALL = (
     'Dict',
     'DistanceSpec',
     'EagerDataFrame',
+    'EagerSeries',
     'Either',
     'Enum',
     'Factor',

@@ -33,6 +33,7 @@ import bokeh.core.property.data_frame as bcpp # isort:skip
 
 ALL = (
     'EagerDataFrame',
+    'EagerSeries',
     'PandasDataFrame',
     'PandasGroupBy',
 )
@@ -74,6 +75,31 @@ class Test_EagerDataFrame:
 
     def test_invalid(self) -> None:
         prop = bcpp.EagerDataFrame()
+        assert not prop.is_valid(None)
+        assert not prop.is_valid(1.0+1.0j)
+        assert not prop.is_valid(())
+        assert not prop.is_valid([])
+        assert not prop.is_valid({})
+        assert not prop.is_valid(_TestHasProps())
+        assert not prop.is_valid(_TestModel())
+
+class Test_EagerSeries:
+    def test_valid(self) -> None:
+        prop = bcpp.EagerSeries()
+        assert prop.is_valid(pd.Series())
+
+    def test_valid_polars(self) -> None:
+        polars = pytest.importorskip('polars')
+        prop = bcpp.EagerSeries()
+        assert prop.is_valid(polars.Series())
+
+    def test_valid_pyarrow(self) -> None:
+        pa = pytest.importorskip('pyarrow')
+        prop = bcpp.EagerSeries()
+        assert prop.is_valid(pa.chunked_array([], type=pa.int64()))
+
+    def test_invalid(self) -> None:
+        prop = bcpp.EagerSeries()
         assert not prop.is_valid(None)
         assert not prop.is_valid(1.0+1.0j)
         assert not prop.is_valid(())
