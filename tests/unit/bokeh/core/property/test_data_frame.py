@@ -86,7 +86,7 @@ class Test_EagerDataFrame:
 class Test_EagerSeries:
     def test_valid(self) -> None:
         prop = bcpp.EagerSeries()
-        assert prop.is_valid(pd.Series())
+        assert prop.is_valid(pd.Series(dtype='float64'))
 
     def test_valid_polars(self) -> None:
         polars = pytest.importorskip('polars')
