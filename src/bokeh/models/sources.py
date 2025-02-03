@@ -43,13 +43,12 @@ from ..core.properties import (
     InstanceDefault,
     Int,
     Nullable,
-    Object,
     Readonly,
     Required,
     Seq,
     String,
 )
-from bokeh.core.property.data_frame import EagerDataFrame, PandasGroupBy
+from ..core.property.data_frame import EagerDataFrame, PandasGroupBy
 from ..model import Model
 from ..util.serialization import convert_datetime_array
 from ..util.warnings import BokehUserWarning, warn

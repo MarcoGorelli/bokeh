@@ -29,8 +29,6 @@ from .bases import Property
 if TYPE_CHECKING:
     from pandas import DataFrame  # noqa: F401
     from pandas.core.groupby import GroupBy  # noqa: F401
-    from narwhals.dataframe import DataFrame as NwDataFrame
-    from narwhals.series import Series as NwSeries
 
 #-----------------------------------------------------------------------------
 # Globals and constants

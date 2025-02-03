@@ -37,13 +37,13 @@ from ..core.properties import (
     Int,
     List,
     Nullable,
-    Object,
     Seq,
     String,
     TextLike,
     TimeDelta,
     Tuple,
 )
+from ..core.property.data_frame import EagerSeries, PandasGroupBy
 from ..models import (
     ColumnDataSource,
     CoordinateMapping,
@@ -56,7 +56,6 @@ from ..models import (
     Tool,
     ToolMenu,
 )
-from bokeh.core.property.data_frame import EagerSeries, PandasGroupBy
 from ..models.dom import Template
 from ..models.tools import (
     Drag,
