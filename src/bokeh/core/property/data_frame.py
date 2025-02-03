@@ -29,6 +29,8 @@ from .bases import Property
 if TYPE_CHECKING:
     from pandas import DataFrame  # noqa: F401
     from pandas.core.groupby import GroupBy  # noqa: F401
+    from narwhals.dataframe import DataFrame as NwDataFrame
+    from narwhals.series import Series as NwSeries
 
 #-----------------------------------------------------------------------------
 # Globals and constants
@@ -44,7 +46,7 @@ __all__ = (
 # General API
 #-----------------------------------------------------------------------------
 
-class EagerDataFrame(Property["DataFrame"]):
+class EagerDataFrame(Property["NwDataFrame"]):
     """ Accept eager dataframe supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
@@ -61,6 +63,25 @@ class EagerDataFrame(Property["DataFrame"]):
             return
 
         msg = "" if not detail else f"expected object convertible to Narwhals DataFrame, got {value!r}"
+        raise ValueError(msg)
+
+class EagerSeries(Property["NwSeries"]):
+    """ Accept eager series supported by Narwhals.
+
+    This property only exists to support type validation, e.g. for "accepts"
+    clauses. It is not serializable itself, and is not useful to add to
+    Bokeh models directly.
+
+    """
+
+    def validate(self, value: Any, detail: bool = True) -> None:
+        import narwhals.stable.v1 as nw
+        super().validate(value, detail)
+
+        if nw.dependencies.is_into_series(value):
+            return
+
+        msg = "" if not detail else f"expected object convertible to Narwhals Series, got {value!r}"
         raise ValueError(msg)
 
 class PandasDataFrame(Property["DataFrame"]):

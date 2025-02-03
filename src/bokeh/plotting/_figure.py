@@ -56,6 +56,7 @@ from ..models import (
     Tool,
     ToolMenu,
 )
+from bokeh.core.property.data_frame import EagerSeries, PandasGroupBy
 from ..models.dom import Template
 from ..models.tools import (
     Drag,
@@ -819,8 +820,8 @@ RangeLike = Either(
         Tuple(TimeDelta, TimeDelta),
     ),
     Seq(String),
-    Object("narwhals.Series"),
-    Object("pandas.core.groupby.GroupBy"),
+    EagerSeries,
+    PandasGroupBy,
 )
 
 AxisType = Nullable(Either(Auto, Enum("linear", "log", "datetime", "mercator")))
