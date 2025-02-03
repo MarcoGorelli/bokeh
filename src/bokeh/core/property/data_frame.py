@@ -27,6 +27,8 @@ from typing import TYPE_CHECKING, Any
 from .bases import Property
 
 if TYPE_CHECKING:
+    from narwhals.stable.v1.typing import IntoDataFrame  # noqa: F401
+    from narwhals.stable.v1.typing import IntoSeries  # noqa: F401
     from pandas import DataFrame  # noqa: F401
     from pandas.core.groupby import GroupBy  # noqa: F401
 
@@ -45,7 +47,7 @@ __all__ = (
 # General API
 #-----------------------------------------------------------------------------
 
-class EagerDataFrame(Property["NwDataFrame"]):
+class EagerDataFrame(Property["IntoDataFrame"]):
     """ Accept eager dataframe supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
@@ -64,7 +66,7 @@ class EagerDataFrame(Property["NwDataFrame"]):
         msg = "" if not detail else f"expected object convertible to Narwhals DataFrame, got {value!r}"
         raise ValueError(msg)
 
-class EagerSeries(Property["NwSeries"]):
+class EagerSeries(Property["IntoSeries"]):
     """ Accept eager series supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
