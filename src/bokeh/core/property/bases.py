@@ -338,12 +338,6 @@ class Property(PropertyDescriptorFactory[T]):
         return value
 
     def prepare_value(self, owner: HasProps | type[HasProps], name: str, value: Any, *, hint: DocumentPatchedEvent | None = None) -> T:
-        import narwhals.stable.v1 as nw
-
-        # Try converting to Narwhals so that any dataframe supported by Narwhals
-        # can be supported.
-        value = nw.from_native(value, eager_only=True, allow_series=True, pass_through=True)
-
         if value is Intrinsic:
             value = self._raw_default()
         if value is Undefined:
