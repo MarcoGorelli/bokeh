@@ -27,12 +27,10 @@ from typing import TYPE_CHECKING, Any
 from .bases import Property
 
 if TYPE_CHECKING:
-    from narwhals.stable.v1 import DataFrame as NwDataFrame, Series as NwSeries
+    from narwhals.stable.v1.typing import IntoDataFrame, IntoSeries  # noqa: F401
     from pandas import DataFrame  # noqa: F401
     from pandas.core.groupby import GroupBy  # noqa: F401
 
-    from ...document.events import DocumentPatchedEvent
-    from ..has_props import HasProps
 
 #-----------------------------------------------------------------------------
 # Globals and constants
@@ -49,7 +47,7 @@ __all__ = (
 # General API
 #-----------------------------------------------------------------------------
 
-class EagerDataFrame(Property["NwDataFrame[Any]"]):
+class EagerDataFrame(Property["IntoDataFrame"]):
     """ Accept eager dataframe supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
@@ -57,7 +55,6 @@ class EagerDataFrame(Property["NwDataFrame[Any]"]):
     Bokeh models directly.
 
     """
-
     def validate(self, value: Any, detail: bool = True) -> None:
         import narwhals.stable.v1 as nw
         super().validate(value, detail)
@@ -68,13 +65,7 @@ class EagerDataFrame(Property["NwDataFrame[Any]"]):
         msg = "" if not detail else f"expected object convertible to Narwhals DataFrame, got {value!r}"
         raise ValueError(msg)
 
-    def prepare_value(self, owner: HasProps | type[HasProps], name: str, value: Any, *, hint: DocumentPatchedEvent | None = None) -> NwDataFrame[Any]:
-        import narwhals.stable.v1 as nw
-        value = nw.from_native(value, eager_only=True)
-
-        return super().prepare_value(owner, name, value, hint=hint)
-
-class EagerSeries(Property["NwSeries"]):
+class EagerSeries(Property["IntoSeries"]):
     """ Accept eager series supported by Narwhals.
 
     This property only exists to support type validation, e.g. for "accepts"
@@ -82,7 +73,6 @@ class EagerSeries(Property["NwSeries"]):
     Bokeh models directly.
 
     """
-
     def validate(self, value: Any, detail: bool = True) -> None:
         import narwhals.stable.v1 as nw
         super().validate(value, detail)
@@ -92,12 +82,6 @@ class EagerSeries(Property["NwSeries"]):
 
         msg = "" if not detail else f"expected object convertible to Narwhals Series, got {value!r}"
         raise ValueError(msg)
-
-    def prepare_value(self, owner: HasProps | type[HasProps], name: str, value: Any, *, hint: DocumentPatchedEvent | None = None) -> NwSeries:
-        import narwhals.stable.v1 as nw
-        value = nw.from_native(value, series_only=True)
-
-        return super().prepare_value(owner, name, value, hint=hint)
 
 class PandasDataFrame(Property["DataFrame"]):
     """ Accept Pandas DataFrame values.
