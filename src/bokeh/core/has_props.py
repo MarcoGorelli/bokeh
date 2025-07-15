@@ -482,7 +482,7 @@ class HasProps(Serializable, metaclass=MetaHasProps):
 
     @overload
     @classmethod
-    def lookup(cls, name: str, *, raises: Literal[False] = False) -> PropertyDescriptor[Any] | None: ...
+    def lookup(cls, name: str, *, raises: Literal[False]) -> PropertyDescriptor[Any] | None: ...
 
     @classmethod
     def lookup(cls, name: str, *, raises: bool = True) -> PropertyDescriptor[Any] | None:
@@ -510,7 +510,7 @@ class HasProps(Serializable, metaclass=MetaHasProps):
     @overload
     @classmethod
     @lru_cache(None)
-    def properties(cls, *, _with_props: Literal[True] = True) -> dict[str, Property[Any]]: ...
+    def properties(cls, *, _with_props: Literal[True]) -> dict[str, Property[Any]]: ...
 
     @classmethod
     @lru_cache(None)

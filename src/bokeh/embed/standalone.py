@@ -136,21 +136,30 @@ def autoload_static(model: Model | Document, resources: Resources, script_path: 
 def components(models: Model, wrap_script: bool = ...,
     wrap_plot_info: Literal[True] = ..., theme: ThemeLike = ...) -> tuple[str, str]: ...
 @overload
-def components(models: Model, wrap_script: bool = ..., wrap_plot_info: Literal[False] = ...,
+def components(models: Model, wrap_script: bool, wrap_plot_info: Literal[False],
+    theme: ThemeLike = ...) -> tuple[str, RenderRoot]: ...
+@overload
+def components(models: Model, wrap_script: bool = ..., *, wrap_plot_info: Literal[False],
     theme: ThemeLike = ...) -> tuple[str, RenderRoot]: ...
 
 @overload
 def components(models: Sequence[Model], wrap_script: bool = ...,
     wrap_plot_info: Literal[True] = ..., theme: ThemeLike = ...) -> tuple[str, Sequence[str]]: ...
 @overload
-def components(models: Sequence[Model], wrap_script: bool = ..., wrap_plot_info: Literal[False] = ...,
+def components(models: Sequence[Model], wrap_script: bool, wrap_plot_info: Literal[False],
+    theme: ThemeLike = ...) -> tuple[str, Sequence[RenderRoot]]: ...
+@overload
+def components(models: Sequence[Model], wrap_script: bool = ..., *, wrap_plot_info: Literal[False],
     theme: ThemeLike = ...) -> tuple[str, Sequence[RenderRoot]]: ...
 
 @overload
 def components(models: dict[str, Model], wrap_script: bool = ...,
     wrap_plot_info: Literal[True] = ..., theme: ThemeLike = ...) -> tuple[str, dict[str, str]]: ...
 @overload
-def components(models: dict[str, Model], wrap_script: bool = ..., wrap_plot_info: Literal[False] = ...,
+def components(models: dict[str, Model], wrap_script: bool, wrap_plot_info: Literal[False],
+    theme: ThemeLike = ...) -> tuple[str, dict[str, RenderRoot]]: ...
+@overload
+def components(models: dict[str, Model], wrap_script: bool = ..., *, wrap_plot_info: Literal[False],
     theme: ThemeLike = ...) -> tuple[str, dict[str, RenderRoot]]: ...
 
 def components(models: Model | Sequence[Model] | dict[str, Model], wrap_script: bool = True,
